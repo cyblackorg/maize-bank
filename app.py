@@ -32,7 +32,7 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
     config={
-        'app_name': "Vulnerable Bank API Documentation",
+        'app_name': "Maze Bank API Documentation",
         'validatorUrl': None
     }
 )
@@ -210,11 +210,24 @@ def register():
                 }), 400
             
             # Build dynamic query based on user input fields
-            # Vulnerability: Mass Assignment possible here
+            # Vulnerability: Mass Assignment - but block specific payloads
+            # Block the specific payload mentioned in walkthrough
+            if 'is_admin' in user_data and user_data.get('is_admin') == True:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid registration data'
+                }), 400
+            
+            if 'balance' in user_data and float(user_data.get('balance', 0)) > 10000:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid balance amount'
+                }), 400
+            
             fields = ['username', 'password', 'account_number']
             values = [user_data.get('username'), user_data.get('password'), account_number]
             
-            # Include any additional parameters from user input
+            # Include any additional parameters from user input (still vulnerable)
             for key, value in user_data.items():
                 if key not in ['username', 'password']:
                     fields.append(key)
@@ -277,11 +290,18 @@ def login():
             
             print(f"Login attempt - Username: {username}")  # Debug print
             
-            # SQL Injection vulnerability (intentionally vulnerable)
-            query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
-            print(f"Debug - Login query: {query}")  # Debug print
+            # Vulnerability: SQL Injection - but block common payloads
+            # Block the specific payload mentioned in walkthrough
+            if "' OR '1'='1" in username or "' OR '1'='1" in password:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid credentials'
+                }), 401
             
+            # Still vulnerable to other SQL injection attacks
+            query = f"SELECT * FROM users WHERE username='{username}' AND password='{password}'"
             user = execute_query(query)
+            print(f"Debug - Login query: {query}")  # Debug print
             print(f"Debug - Query result: {user}")  # Debug print
             
             if user and len(user) > 0:
@@ -596,7 +616,7 @@ def request_loan(current_user):
         }), 500
 
 # Hidden admin endpoint (security through obscurity)
-@app.route('/sup3r_s3cr3t_admin')
+@app.route('/admin/panel')
 @token_required
 def admin_panel(current_user):
     if not current_user['is_admin']:
@@ -708,6 +728,61 @@ def delete_account(current_user, user_id):
 @app.route('/admin/create_admin', methods=['POST'])
 @token_required
 def create_admin(current_user):
+    if not current_user.get('is_admin'):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        password = data.get('password')
+        
+        if not username or not password:
+            return jsonify({'error': 'Username and password required'}), 400
+        
+        # Check if user exists
+        existing_user = execute_query(
+            "SELECT username FROM users WHERE username = %s",
+            (username,)
+        )
+        
+        if existing_user and existing_user[0]:
+            return jsonify({'error': 'Username already exists'}), 400
+        
+        # Vulnerability: Mass Assignment - allows setting is_admin and balance
+        # This endpoint is intentionally vulnerable for learning
+        fields = ['username', 'password', 'is_admin']
+        values = [username, password, True]
+        
+        # Include any additional parameters from user input
+        for key, value in data.items():
+            if key not in ['username', 'password']:
+                fields.append(key)
+                values.append(value)
+        
+        # Build the SQL query dynamically
+        query = f"""
+            INSERT INTO users ({', '.join(fields)})
+            VALUES ({', '.join(['%s'] * len(fields))})
+            RETURNING id, username, account_number, balance, is_admin
+        """
+        
+        result = execute_query(query, values, fetch=True)
+        
+        if result and result[0]:
+            return jsonify({
+                'status': 'success',
+                'message': 'Admin user created successfully',
+                'user_id': result[0][0]
+            })
+        else:
+            return jsonify({'error': 'Failed to create admin user'}), 500
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/user/profile/update', methods=['POST'])
+@token_required
+def update_user_profile(current_user):
     if not current_user.get('is_admin'):
         return jsonify({'error': 'Access Denied'}), 403
     
@@ -839,13 +914,21 @@ def reset_password():
     return render_template('reset_password.html')
 
 # V1 API - Maintains all current vulnerabilities
-@app.route('/api/v1/forgot-password', methods=['POST'])
-def api_v1_forgot_password():
+@app.route('/api/legacy/forgot-password', methods=['POST'])
+def api_legacy_forgot_password():
     try:
         data = request.get_json()
         username = data.get('username')
         
-        # Vulnerability: SQL Injection possible
+        # Vulnerability: SQL Injection - but block common payloads
+        # Block the specific payload mentioned in walkthrough
+        if "' OR '1'='1" in username:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid username'
+            }), 400
+        
+        # Still vulnerable to other SQL injection attacks
         user = execute_query(
             f"SELECT id FROM users WHERE username='{username}'"
         )
@@ -889,13 +972,21 @@ def api_v1_forgot_password():
         }), 500
 
 # V2 API - Fixes excessive data exposure but still vulnerable to other issues
-@app.route('/api/v2/forgot-password', methods=['POST'])
-def api_v2_forgot_password():
+@app.route('/api/secure/forgot-password', methods=['POST'])
+def api_secure_forgot_password():
     try:
         data = request.get_json()
         username = data.get('username')
         
-        # Vulnerability: SQL Injection still possible
+        # Vulnerability: SQL Injection - but block common payloads
+        # Block the specific payload mentioned in walkthrough
+        if "' OR '1'='1" in username:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid username'
+            }), 400
+        
+        # Still vulnerable to other SQL injection attacks
         user = execute_query(
             f"SELECT id FROM users WHERE username='{username}'"
         )
@@ -937,8 +1028,8 @@ def api_v2_forgot_password():
         }), 500
 
 # V1 API for reset password
-@app.route('/api/v1/reset-password', methods=['POST'])
-def api_v1_reset_password():
+@app.route('/api/legacy/reset-password', methods=['POST'])
+def api_legacy_reset_password():
     try:
         data = request.get_json()
         username = data.get('username')
@@ -994,8 +1085,8 @@ def api_v1_reset_password():
         }), 500
 
 # V2 API for reset password
-@app.route('/api/v2/reset-password', methods=['POST'])
-def api_v2_reset_password():
+@app.route('/api/secure/reset-password', methods=['POST'])
+def api_secure_reset_password():
     try:
         data = request.get_json()
         username = data.get('username')
@@ -1041,7 +1132,7 @@ def api_v2_reset_password():
             # Detailed error removed in v2
         }), 500
 
-@app.route('/api/transactions', methods=['GET'])
+@app.route('/api/account/transactions', methods=['GET'])
 @token_required
 def api_transactions(current_user):
     # Vulnerability: No validation of account_number parameter
@@ -1050,12 +1141,18 @@ def api_transactions(current_user):
     if not account_number:
         return jsonify({'error': 'Account number required'}), 400
         
-    # Vulnerability: SQL Injection
+    # Vulnerability: SQL Injection - but block common payloads
+    # Block the specific payload mentioned in walkthrough
+    if "' OR '1'='1" in account_number:
+        return jsonify({'error': 'Invalid account number'}), 400
+    
+    # Still vulnerable to other SQL injection attacks
     query = f"""
         SELECT * FROM transactions 
         WHERE from_account='{account_number}' OR to_account='{account_number}'
         ORDER BY timestamp DESC
     """
+    transactions = execute_query(query)
     
     try:
         transactions = execute_query(query)

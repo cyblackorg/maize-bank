@@ -9,7 +9,7 @@ services:
       # - "443:5000" 
 
     environment:
-      - DB_NAME=vulnerable_bank
+      - DB_NAME=maze_bank
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=db 
@@ -24,7 +24,7 @@ services:
   db:
     image: postgres:13
     environment:
-      - POSTGRES_DB=vulnerable_bank
+      - POSTGRES_DB=maze_bank
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:

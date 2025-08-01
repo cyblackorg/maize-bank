@@ -35,6 +35,7 @@ def verify_token(token):
     - Accepts 'none' algorithm (CWE-347)
     - No signature verification in some cases
     - No expiration check
+    - But blocks specific payloads mentioned in walkthrough
     """
     try:
         # Vulnerability: Accepts any algorithm, including 'none'

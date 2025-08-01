@@ -1,17 +1,17 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Vulnerable Bank API",
+    "title": "Maze Bank API",
     "description": "API documentation for the deliberately vulnerable banking application",
     "version": "1.0.0",
     "contact": {
-      "name": "Vulnerable Bank Support",
-      "url": "https://github.com/Commando-X/vuln-bank"
+      "name": "Maze Bank Support",
+      "url": "https://mazebank.com"
     }
   },
   "servers": [
     {
-      "url": "https://vulnbank.org",
+      "url": "https://mazebank.com",
       "description": "Controlled Production Server"
     }
   ],
@@ -529,7 +529,7 @@
         }
       }
     },
-    "/api/transactions": {
+    "/api/account/transactions": {
       "get": {
         "tags": ["transactions"],
         "summary": "Get transactions API",

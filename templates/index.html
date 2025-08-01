@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vulnerable Bank</title>
+    <title>Maze Bank</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon-16.svg') }}" sizes="16x16">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
@@ -23,7 +23,7 @@
         }
         
         header {
-            background: linear-gradient(140deg, #007bff 0%, #002147 100%);
+            background: linear-gradient(140deg, #6f42c1 0%, #4a148c 100%);
             color: white;
             padding: 1.5rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -76,8 +76,10 @@
         
         .hero-image img {
             max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            object-fit: cover;
         }
         
         h1 {
@@ -111,15 +113,15 @@
         }
         
         .primary {
-            background: linear-gradient(140deg, #007bff 0%, #0056b3 100%);
+            background: linear-gradient(140deg, #6f42c1 0%, #5a2d91 100%);
             color: white;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(111, 66, 193, 0.3);
         }
         
         .secondary {
             /* background: white; */
             background: linear-gradient(140deg, #f0f1f1 0%, #fffefe 100%);
-            color: #007bff;
+            color: #6f42c1;
             /* color: white; */
             /* color: #ffffff; */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -136,7 +138,7 @@
         }
         
         .primary:hover {
-            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            box-shadow: 0 6px 15px rgba(111, 66, 193, 0.4);
         }
         
         .secondary:hover {
@@ -145,7 +147,7 @@
         
         /* Mobile App Promotion Section */
         .app-promo {
-            background: linear-gradient(140deg, rgba(0, 123, 255, 0.85) 0%, rgba(0, 33, 71, 0.9) 100%);
+            background: linear-gradient(140deg, rgba(111, 66, 193, 0.85) 0%, rgba(74, 20, 140, 0.9) 100%);
             padding: 5rem 2rem;
             color: white;
             position: relative;
@@ -268,7 +270,7 @@
         }
         
         .balance-card {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            background: linear-gradient(135deg, #6f42c1 0%, #5a2d91 100%);
             color: white;
             padding: 1.5rem;
             border-radius: 15px;
@@ -342,7 +344,7 @@
         .feature-icon {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: #007bff;
+            color: #6f42c1;
         }
         
         .feature-title {
@@ -513,13 +515,13 @@
         .landing-chat-toggle {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #007bff 0%, #002147 100%);
+            background: linear-gradient(135deg, #6f42c1 0%, #4a148c 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(111, 66, 193, 0.3);
             transition: all 0.3s ease;
             position: relative;
             border: none;
@@ -527,7 +529,7 @@
 
         .landing-chat-toggle:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 25px rgba(0, 123, 255, 0.4);
+            box-shadow: 0 6px 25px rgba(111, 66, 193, 0.4);
         }
 
         .landing-chat-tooltip {
@@ -580,7 +582,7 @@
         }
 
         .landing-chat-header {
-            background: linear-gradient(135deg, #007bff 0%, #002147 100%);
+            background: linear-gradient(135deg, #6f42c1 0%, #4a148c 100%);
             color: white;
             padding: 15px 20px;
             display: flex;
@@ -665,7 +667,7 @@
         }
 
         .landing-bot-message .landing-message-avatar {
-            background: #007bff;
+            background: #6f42c1;
             color: white;
         }
 
@@ -689,7 +691,7 @@
         }
 
         .landing-user-message .landing-message-text {
-            background: #007bff;
+            background: #6f42c1;
             color: white;
         }
 
@@ -723,13 +725,13 @@
         }
 
         #landingChatMessageInput:focus {
-            border-color: #007bff;
+            border-color: #6f42c1;
         }
 
         #landingSendChatBtn {
             width: 40px;
             height: 40px;
-            background: #007bff;
+            background: #6f42c1;
             border: none;
             border-radius: 50%;
             color: white;
@@ -741,7 +743,7 @@
         }
 
         #landingSendChatBtn:hover {
-            background: #002147;
+            background: #4a148c;
         }
 
         .landing-typing-indicator {
@@ -782,25 +784,20 @@
     <div class="hero-container">
         <header>
             <div class="header-content">
-                <div class="bank-logo">Vulnerable Bank</div>
+                <div class="bank-logo">Maze Bank</div>
                 <nav class="nav-links">
                     <!-- <a href="{{ url_for('login') }}">Sign In</a> -->
                     <!-- <a href="{{ url_for('register') }}">Sign Up</a> -->
-                    <a href="https://github.com/Commando-X/vuln-bank?tab=readme-ov-file#testing-guide-" target="_blank">Guide</a>
                     <a href="/api/docs"> API Docs</a>
-                    <a href="https://github.com/Commando-X/vuln-bank" target="_blank" title="View on GitHub">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle;">
-                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                        </svg>
-                    </a>
+
                 </nav>
             </div>
         </header>
         
         <div class="hero">
             <div class="hero-content">
-                <h1>Banking Made Simple & InSecure</h1>
-                <p>This is an Intentionally vulnerable application, designed for everyone to practice application security.</p>
+                <h1>Banking Made Simple & Secure</h1>
+                <p>Experience modern banking with our cutting-edge financial platform designed for security testing and learning.</p>
                 <div class="hero-buttons">
                     <a href="{{ url_for('login') }}" class="button primary">Login</a>
                     <a href="{{ url_for('register') }}" class="button secondary">Register</a>
@@ -809,7 +806,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="{{ url_for('static', filename='uploads/banking-app.png') }}" onerror="this.src='https://via.placeholder.com/500x300?text=Banking+App'" alt="Banking App">
+                <img src="{{ url_for('static', filename='uploads/banking-hero.jpg') }}" onerror="this.src='https://via.placeholder.com/500x300?text=Banking+App'" alt="Modern Banking">
             </div>
         </div>
         
@@ -818,9 +815,9 @@
             <div class="app-promo-content">
                 <div class="app-promo-text">
                     <h2 class="app-promo-title">Banking in Your Pocket</h2>
-                    <p class="app-promo-subtitle">Experience the future of mobile banking with our cutting-edge vulnerable android app</p>
+                    <p class="app-promo-subtitle">Experience the future of mobile banking with our cutting-edge secure android app</p>
                     <p class="app-promo-description">Access all your banking needs on-the-go. Transfer money, pay bills, and manage your finances with just a few taps. Security and convenience, redefined.</p>
-                    <a href="https://github.com/Commando-X/vuln-bank-mobile" target="_blank" class="download-btn">
+                    <a href="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fgtawiki%2Fimages%2Fc%2Fcb%2FTrevorPhilips-GTAVe-Prologue.png%2Frevision%2Flatest%3Fcb%3D20220608064500&f=1&nofb=1&ipt=76d21280810a4ea53943f20c099605a6aa1bdfe9eba4b618505630a86acffbd7" target="_blank" class="download-btn">
                         <svg width="20" height="20" fill="#3DDC84" viewBox="0 0 24 24" style="margin-right: 8px;">
                             <path d="M6.818 10.023l1.227-2.482A.424.424 0 01.61 7.375l-1.401 2.834A8.107 8.107 0 015.337 9.48c.394-.162.822-.295 1.255-.394l.226-.063zm10.364 0c.433.099.861.232 1.255.394a8.107 8.107 0 01-1.128.729l-1.401-2.834a.424.424 0 01-.166-.166l1.227 2.482c.071.02.142.039.213.059zM11.999 3.75c-1.676 0-3.318.451-4.75 1.303L6.021 2.396a.424.424 0 11-.738.384l1.288 2.609a8.25 8.25 0 00-1.227 7.861h14.712a8.25 8.25 0 00-1.227-7.861l1.288-2.609a.424.424 0 11-.738-.384l-1.228 2.657A8.178 8.178 0 0011.999 3.75zm-2.05 5.5a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm5.85 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
                             <path d="M6.751 15h10.498a.75.75 0 01.75.75v4.5a2.25 2.25 0 01-2.25 2.25h-6.75A2.25 2.25 0 016.75 20.25v-4.5a.75.75 0 01.751-.75z"/>
@@ -834,7 +831,7 @@
                             <div class="app-interface">
                                 <div class="app-header">
                                     <div class="app-logo">🏦</div>
-                                    <span>Vulnerable Bank</span>
+                                    <span>Maze Bank</span>
                                 </div>
                                 <div class="balance-card">
                                     <div class="balance-label">Total Balance</div>
@@ -884,7 +881,7 @@
                     <div class="feature-card">
                         <div class="feature-icon">📱</div>
                         <h3 class="feature-title">Mobile App</h3>
-                        <p>Access your account anytime, anywhere with our insecure mobile banking application.</p>
+                        <p>Access your account anytime, anywhere with our secure mobile banking application.</p>
                     </div>
                 </div>
             </div>
@@ -893,27 +890,10 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-left">
-                    <p>Vulnerable Bank | Made for Security Engineers to practice Application Security</p>
+                    <p>Maze Bank | Made for Easy Banking, Easy Life</p>
                 </div>
                 <div class="footer-right">
-                    <p class="connect-text">Connect with Al-Amir Badmus:</p>
-                    <div class="social-links">
-                        <a href="https://www.linkedin.com/in/badmus-al-amir/" target="_blank" title="LinkedIn" class="social-link">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                            </svg>
-                        </a>
-                        <a href="https://x.com/commando_skiipz" target="_blank" title="Twitter/X" class="social-link">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
-                            </svg>
-                        </a>
-                        <a href="https://github.com/Commando-X" target="_blank" title="GitHub" class="social-link">
-                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                        </a>
-                    </div>
+                    
                 </div>
             </div>
         </footer>
