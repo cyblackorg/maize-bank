@@ -14,6 +14,7 @@ from ai_agent_deepseek import ai_agent
 import time
 from functools import wraps
 from collections import defaultdict
+from protections import system_protection
 
 # Load environment variables
 load_dotenv()
@@ -1836,6 +1837,59 @@ def ai_rate_limit_status():
         return jsonify({
             'status': 'error',
             'message': str(e)
+        }), 500
+
+# Protected system command endpoint
+@app.route('/api/system/execute', methods=['POST'])
+@token_required
+def execute_system_command(current_user):
+    """
+    Protected system command execution endpoint
+    Only allows safe commands to be executed
+    """
+    if not current_user.get('is_admin'):
+        return jsonify({'error': 'Admin access required'}), 403
+    
+    try:
+        data = request.get_json()
+        command = data.get('command', '')
+        
+        if not command:
+            return jsonify({'error': 'Command is required'}), 400
+        
+        # Check if command is safe to execute
+        is_safe, error_msg = system_protection.is_safe_to_execute(command)
+        if not is_safe:
+            return jsonify({
+                'status': 'error',
+                'message': f'Command blocked: {error_msg}',
+                'command': command
+            }), 403
+        
+        # Execute command safely
+        success, stdout, stderr = system_protection.safe_execute(command)
+        
+        if success:
+            return jsonify({
+                'status': 'success',
+                'message': 'Command executed successfully',
+                'stdout': stdout,
+                'stderr': stderr,
+                'command': command
+            })
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': f'Command execution failed: {stderr}',
+                'stdout': stdout,
+                'stderr': stderr,
+                'command': command
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': f'System command error: {str(e)}'
         }), 500
 
 if __name__ == '__main__':

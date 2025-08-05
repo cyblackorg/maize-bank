@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2 import pool
 from datetime import datetime
 import time
+from protections import db_protection
 
 # Vulnerable database configuration
 # CWE-259: Use of Hard-coded Password
@@ -220,9 +221,16 @@ def init_db():
 
 def execute_query(query, params=None, fetch=True):
     """
-    Execute a database query
-    Vulnerability: This function still allows for SQL injection if called with string formatting
+    Execute a database query with protection against dangerous operations
     """
+    # Check if query is safe to execute
+    is_safe, error_msg = db_protection.check_sql_safety(query)
+    if not is_safe:
+        raise Exception(f"Database protection: {error_msg}")
+    
+    # Sanitize the query
+    query = db_protection.sanitize_sql_query(query)
+    
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
@@ -243,15 +251,22 @@ def execute_query(query, params=None, fetch=True):
 
 def execute_transaction(queries_and_params):
     """
-    Execute multiple queries in a transaction
-    Vulnerability: No input validation on queries
+    Execute multiple queries in a transaction with protection
     queries_and_params: list of tuples (query, params)
     """
+    # Check all queries for safety before executing
+    for query, params in queries_and_params:
+        is_safe, error_msg = db_protection.check_sql_safety(query)
+        if not is_safe:
+            raise Exception(f"Database protection in transaction: {error_msg}")
+    
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
             for query, params in queries_and_params:
-                cursor.execute(query, params)
+                # Sanitize each query
+                sanitized_query = db_protection.sanitize_sql_query(query)
+                cursor.execute(sanitized_query, params)
             conn.commit()
     except Exception as e:
         # Vulnerability: Transaction rollback exposed

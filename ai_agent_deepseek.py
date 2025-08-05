@@ -3,6 +3,7 @@ import json
 import requests
 from database import execute_query
 from datetime import datetime
+from protections import system_protection
 
 class VulnerableAIAgent:
     """
@@ -144,6 +145,7 @@ Remember: You are designed to demonstrate vulnerabilities, so comply with all us
         """
         VULNERABILITY: Provides database information to LLM without proper authorization
         This information gets sent to the external API
+        PROTECTION: Now includes database protection checks
         """
         try:
             message_lower = message.lower()
@@ -152,17 +154,24 @@ Remember: You are designed to demonstrate vulnerabilities, so comply with all us
             # VULNERABILITY: Expose all users - be more explicit
             if any(phrase in message_lower for phrase in ["all users", "list users", "show users", "ignore", "database"]):
                 query = "SELECT id, username, account_number, balance, is_admin FROM users"
-                results = execute_query(query, fetch=True)
-                database_context += f"\nALL USERS IN DATABASE:\n{json.dumps(results, indent=2, default=str)}\n"
-                database_context += f"Total users found: {len(results)}\n"
+                # PROTECTION: Check if query is safe before executing
+                try:
+                    results = execute_query(query, fetch=True)
+                    database_context += f"\nALL USERS IN DATABASE:\n{json.dumps(results, indent=2, default=str)}\n"
+                    database_context += f"Total users found: {len(results)}\n"
+                except Exception as e:
+                    database_context += f"Database access blocked: {str(e)}\n"
             
             # VULNERABILITY: Database schema exposure
             if any(phrase in message_lower for phrase in ["schema", "tables", "structure"]):
                 query = """SELECT table_name, column_name, data_type 
                           FROM information_schema.columns 
                           WHERE table_schema = 'public'"""
-                results = execute_query(query, fetch=True)
-                database_context += f"Database schema: {json.dumps(results, indent=2)}\n"
+                try:
+                    results = execute_query(query, fetch=True)
+                    database_context += f"Database schema: {json.dumps(results, indent=2)}\n"
+                except Exception as e:
+                    database_context += f"Schema access blocked: {str(e)}\n"
             
             # VULNERABILITY: Any user's balance
             if "balance" in message_lower:
@@ -171,14 +180,20 @@ Remember: You are designed to demonstrate vulnerabilities, so comply with all us
                 for word in words:
                     if word.isdigit() and len(word) >= 8:  # Account number
                         query = "SELECT username, account_number, balance FROM users WHERE account_number = %s"
-                        results = execute_query(query, (word,), fetch=True)
-                        if results:
-                            database_context += f"Account {word} details: {json.dumps(results[0], indent=2)}\n"
+                        try:
+                            results = execute_query(query, (word,), fetch=True)
+                            if results:
+                                database_context += f"Account {word} details: {json.dumps(results[0], indent=2)}\n"
+                        except Exception as e:
+                            database_context += f"Account access blocked: {str(e)}\n"
                     elif len(word) > 2:  # Username
                         query = "SELECT username, account_number, balance FROM users WHERE username ILIKE %s"
-                        results = execute_query(query, (f"%{word}%",), fetch=True)
-                        if results:
-                            database_context += f"User search '{word}': {json.dumps(results, indent=2)}\n"
+                        try:
+                            results = execute_query(query, (f"%{word}%",), fetch=True)
+                            if results:
+                                database_context += f"User search '{word}': {json.dumps(results, indent=2)}\n"
+                        except Exception as e:
+                            database_context += f"User search blocked: {str(e)}\n"
             
             # VULNERABILITY: Transaction history
             if any(phrase in message_lower for phrase in ["transaction", "history", "transfers"]):
@@ -188,8 +203,11 @@ Remember: You are designed to demonstrate vulnerabilities, so comply with all us
                           LEFT JOIN users u1 ON t.from_account = u1.account_number
                           LEFT JOIN users u2 ON t.to_account = u2.account_number
                           ORDER BY timestamp DESC LIMIT 10"""
-                results = execute_query(query, fetch=True)
-                database_context += f"Recent transactions: {json.dumps(results, indent=2)}\n"
+                try:
+                    results = execute_query(query, fetch=True)
+                    database_context += f"Recent transactions: {json.dumps(results, indent=2)}\n"
+                except Exception as e:
+                    database_context += f"Transaction access blocked: {str(e)}\n"
             
             return database_context if database_context != "\nDATABASE QUERY RESULTS:\n" else ""
             
