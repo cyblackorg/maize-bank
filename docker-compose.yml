@@ -10,8 +10,8 @@ services:
 
     environment:
       - DB_NAME=maze_bank
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
+      - DB_USER=postmalonegres
+      - DB_PASSWORD=P0stresostgres4432
       - DB_HOST=db 
       - DB_PORT=5432
     depends_on:
@@ -25,8 +25,8 @@ services:
     image: postgres:13
     environment:
       - POSTGRES_DB=maze_bank
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postmalonegres
+      - POSTGRES_PASSWORD=P0stresostgres4432
     ports:
       - "5432:5432"
     volumes:
